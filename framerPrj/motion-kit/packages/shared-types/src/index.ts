@@ -8,6 +8,8 @@ export type ApplyStrategy =
   | "insert-instance"
   | "insert-detached"
 
+export type DeliveryMode = "direct-apply" | "insert-effect"
+
 export type SelectionPolicy = "single" | "multi" | "any"
 
 export type TargetKind =
@@ -64,6 +66,7 @@ export interface MotionEffectDefinition {
   compatibleTargets: TargetKind[]
   selectionPolicy: SelectionPolicy
   implementationType: EffectImplementationType
+  deliveryMode: DeliveryMode
   applyStrategy: ApplyStrategy
   previewUrl: string
   previewAlt: string
@@ -95,4 +98,3 @@ export interface SelectionSnapshot {
   labels: string[]
   dominantTarget: TargetKind
 }
-

@@ -1,5 +1,8 @@
 import { framer } from "framer-plugin"
-import { effectCategories } from "@motionkit/effect-catalog"
+import {
+  effectCategories,
+  effectMatchesSelection,
+} from "@motionkit/effect-catalog"
 import type {
   EffectCatalogManifest,
   MotionEffectDefinition,
@@ -24,6 +27,7 @@ export function App() {
   const [catalog, setCatalog] = useState<EffectCatalogManifest | null>(null)
   const [activeCategory, setActiveCategory] = useState(effectCategories[0]?.id ?? "")
   const [applyingEffectId, setApplyingEffectId] = useState<string | null>(null)
+  const [expandedEffectId, setExpandedEffectId] = useState<string | null>("appear-direct")
   const [catalogStatus, setCatalogStatus] = useState<"loading" | "ready" | "fallback">(
     "loading",
   )
@@ -55,12 +59,9 @@ export function App() {
 
   const visibleEffects = (catalog?.effects ?? []).filter((effect) => {
     if (activeCategory && effect.category !== activeCategory) return false
-    if (selectionSnapshot.count === 0) return false
+    if (selectionSnapshot.count === 0) return true
 
-    return effect.compatibleTargets.includes("any")
-      || effect.compatibleTargets.some((target) =>
-          selectionSnapshot.targets.includes(target),
-        )
+    return effectMatchesSelection(effect, selectionSnapshot)
   })
 
   const handleApply = async (effect: MotionEffectDefinition) => {
@@ -75,33 +76,40 @@ export function App() {
 
   return (
     <main>
-      <section className="hero">
-        <div>
-          <p className="eyebrow">MotionKit</p>
-          <h1>VFX library for Framer builders</h1>
+      <header className="topbar">
+        <div className="topbar-copy">
+          <span className="eyebrow">MotionKit</span>
+          <h1>Effects</h1>
         </div>
-        <p className="hero-copy">
-          Pick an effect, apply it to the current selection, and keep tuning in
-          Framer.
-        </p>
-      </section>
+        <span className="selection-counter">
+          {selectionSnapshot.count === 0
+            ? "No selection"
+            : `${selectionSnapshot.count} selected`}
+        </span>
+      </header>
 
       <SelectionSummary selection={selectionSnapshot} />
 
-      <section className="panel">
-        <div className="panel-header">
-          <strong>Catalog</strong>
+      <details className="meta-drawer">
+        <summary>
+          <span>Catalog & integration modes</span>
           <span className={`status-chip status-${catalogStatus}`}>
             {catalogStatus === "loading" && "Loading"}
             {catalogStatus === "ready" && `Source: ${catalog?.source ?? "local"}`}
             {catalogStatus === "fallback" && "Fallback to local"}
           </span>
+        </summary>
+        <div className="meta-grid">
+          <div className="meta-block">
+            <strong>Direct Apply</strong>
+            <p>Plugin edits the selected layer itself. Best for simple native presets.</p>
+          </div>
+          <div className="meta-block">
+            <strong>Insert Effect</strong>
+            <p>Plugin inserts a component-based effect. Best for richer motion or reusable VFX.</p>
+          </div>
         </div>
-        <p className="muted">
-          Effects live in a catalog so MotionKit can evolve the library without
-          bundling every VFX implementation into the plugin shell.
-        </p>
-      </section>
+      </details>
 
       <section className="tabs" aria-label="Effect categories">
         {(catalog?.categories ?? effectCategories).map((category) => (
@@ -116,6 +124,15 @@ export function App() {
         ))}
       </section>
 
+      <section className="list-header">
+        <strong>{activeCategory ? "Filtered effects" : "Effects"}</strong>
+        <span className="muted">
+          {selectionSnapshot.count === 0
+            ? "Browse first, then select a layer to apply."
+            : `${visibleEffects.length} compatible`}
+        </span>
+      </section>
+
       <section className="effect-list">
         {visibleEffects.length > 0 ? (
           visibleEffects.map((effect) => (
@@ -123,8 +140,12 @@ export function App() {
               key={effect.id}
               effect={effect}
               disabled={selectionSnapshot.count === 0}
+              expanded={expandedEffectId === effect.id}
               isApplying={applyingEffectId === effect.id}
               onApply={() => void handleApply(effect)}
+              onToggle={() =>
+                setExpandedEffectId((current) => (current === effect.id ? null : effect.id))
+              }
             />
           ))
         ) : (

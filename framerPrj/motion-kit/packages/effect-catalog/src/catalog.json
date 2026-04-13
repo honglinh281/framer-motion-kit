@@ -16,6 +16,115 @@
   ],
   "effects": [
     {
+      "id": "appear-direct",
+      "name": "Appear Direct",
+      "summary": "Apply a native appear start state directly onto the selected frame to test the direct-apply flow.",
+      "category": "entrance",
+      "status": "ready",
+      "tags": ["native", "direct", "appear"],
+      "compatibleTargets": ["frame", "image"],
+      "selectionPolicy": "single",
+      "implementationType": "native",
+      "deliveryMode": "direct-apply",
+      "applyStrategy": "set-attributes",
+      "previewUrl": "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=800&q=80",
+      "previewAlt": "Appear Direct preview",
+      "defaultParams": {
+        "startOpacity": 0.3,
+        "duration": 0.45
+      },
+      "controls": [
+        {
+          "id": "startOpacity",
+          "label": "Start Opacity",
+          "type": "number",
+          "description": "Opacity written directly to the selected frame.",
+          "defaultValue": 0.3,
+          "min": 0,
+          "max": 1,
+          "step": 0.05
+        },
+        {
+          "id": "duration",
+          "label": "Duration",
+          "type": "number",
+          "description": "Entry duration in seconds.",
+          "defaultValue": 0.45,
+          "min": 0.1,
+          "max": 2,
+          "step": 0.05
+        }
+      ],
+      "nativePatch": {
+        "attributes": {
+          "opacity": 0.3
+        },
+        "notes": [
+          "This directly edits the selected frame.",
+          "It is a native start-state preset, not a full runtime animation wrapper."
+        ]
+      },
+      "authoringNotes": [
+        "Use this to test the direct-apply integration path."
+      ]
+    },
+    {
+      "id": "appear-frame",
+      "name": "Appear Inserted",
+      "summary": "Generate a local code component in the current project and insert it as an appear demo for the selected frame.",
+      "category": "entrance",
+      "status": "ready",
+      "tags": ["generated", "code-component", "appear"],
+      "compatibleTargets": ["frame", "image"],
+      "selectionPolicy": "single",
+      "implementationType": "code-component",
+      "deliveryMode": "insert-effect",
+      "applyStrategy": "insert-instance",
+      "previewUrl": "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=800&q=80",
+      "previewAlt": "Appear Inserted preview",
+      "defaultParams": {
+        "label": "Appear",
+        "color": "#0ea5e9",
+        "radius": 24,
+        "startOpacity": 0,
+        "distance": 26,
+        "duration": 0.45,
+        "delay": 0,
+        "shadow": true
+      },
+      "controls": [
+        {
+          "id": "distance",
+          "label": "Distance",
+          "type": "number",
+          "description": "Initial vertical offset before the appear transition settles.",
+          "defaultValue": 26,
+          "min": 0,
+          "max": 120,
+          "step": 2
+        },
+        {
+          "id": "duration",
+          "label": "Duration",
+          "type": "number",
+          "description": "Entry duration in seconds.",
+          "defaultValue": 0.45,
+          "min": 0.1,
+          "max": 2,
+          "step": 0.05
+        }
+      ],
+      "componentSource": {
+        "moduleUrl": "generated://appear-frame",
+        "version": "local",
+        "insertMode": "instance",
+        "exportedName": "MotionKitAppear"
+      },
+      "authoringNotes": [
+        "Use this to test the insert-based integration path without publishing a shared library first."
+      ]
+    },
+    {
       "id": "blur-fade-in",
       "name": "Blur Fade In",
       "summary": "A conservative native preset for quick entrance motion scaffolding.",
@@ -25,6 +134,7 @@
       "compatibleTargets": ["frame", "image", "text", "component-instance", "svg"],
       "selectionPolicy": "single",
       "implementationType": "native",
+      "deliveryMode": "direct-apply",
       "applyStrategy": "set-attributes",
       "previewUrl": "https://images.unsplash.com/photo-1515879218367-8466d910aaa4?auto=format&fit=crop&w=800&q=80",
       "previewAlt": "Blur Fade In preview",
@@ -78,6 +188,7 @@
       "compatibleTargets": ["frame", "text", "image"],
       "selectionPolicy": "single",
       "implementationType": "native",
+      "deliveryMode": "direct-apply",
       "applyStrategy": "set-attributes",
       "previewUrl": "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=800&q=80",
       "previewAlt": "Scroll Reveal Up preview",
@@ -127,6 +238,7 @@
       "compatibleTargets": ["frame", "image"],
       "selectionPolicy": "single",
       "implementationType": "smart-component",
+      "deliveryMode": "insert-effect",
       "applyStrategy": "insert-detached",
       "previewUrl": "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=800&q=80",
       "previewAlt": "Parallax Depth preview",
@@ -181,6 +293,7 @@
       "compatibleTargets": ["frame", "component-instance"],
       "selectionPolicy": "single",
       "implementationType": "smart-component",
+      "deliveryMode": "insert-effect",
       "applyStrategy": "insert-instance",
       "previewUrl": "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=800&q=80",
       "previewAlt": "Slide Stack preview",
@@ -235,6 +348,7 @@
       "compatibleTargets": ["image", "frame"],
       "selectionPolicy": "single",
       "implementationType": "code-component",
+      "deliveryMode": "insert-effect",
       "applyStrategy": "insert-instance",
       "previewUrl": "https://images.unsplash.com/photo-1526378722484-bd91ca387e72?auto=format&fit=crop&w=800&q=80",
       "previewAlt": "Pixel Scroll preview",
@@ -292,6 +406,7 @@
       "compatibleTargets": ["image", "frame", "component-instance"],
       "selectionPolicy": "single",
       "implementationType": "code-component",
+      "deliveryMode": "insert-effect",
       "applyStrategy": "insert-instance",
       "previewUrl": "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=800&q=80",
       "previewAlt": "Hover Distortion preview",
@@ -338,4 +453,3 @@
     }
   ]
 }
-
